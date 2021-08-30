@@ -3,10 +3,12 @@ package com.iambabul.blog.service;
 import com.iambabul.blog.entity.TitleSubtitle;
 import com.iambabul.blog.repository.TitleSubtitleRepository;
 import com.iambabul.blog.util.Constants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Service @Slf4j @Transactional
 public class TitleSubtitleService {
 
     private final TitleSubtitleRepository titleSubtitleRepository;
@@ -17,6 +19,13 @@ public class TitleSubtitleService {
     }
 
     public TitleSubtitle getTitleSubtitle() {
-        return titleSubtitleRepository.findAll().get(Constants.FIRST_INDEX);
+        try {
+            log.info("getTitleSubtitle");
+            return titleSubtitleRepository.findAll().get(Constants.FIRST_INDEX);
+        }
+        catch (Exception ex) {
+            log.error(ex.getMessage());
+            return null;
+        }
     }
 }
