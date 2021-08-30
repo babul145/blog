@@ -1,5 +1,6 @@
 package com.iambabul.blog.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,14 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
-
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public AppSecurityConfig(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
