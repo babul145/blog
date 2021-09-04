@@ -9,12 +9,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class TitleSubtitleService extends UtilBase {
     private final TitleSubtitleRepository titleSubtitleRepository;
+
+    public List<TitleSubtitle> getAllTitleSubtitle() {
+        log.info("getAllTitleSubtitle");
+        try {
+            return titleSubtitleRepository.findAll();
+        }
+        catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw ex;
+        }
+    }
 
     public TitleSubtitle getTitleSubtitle(Long id) {
         log.info("getTitleSubtitle");
@@ -32,6 +45,7 @@ public class TitleSubtitleService extends UtilBase {
         log.info("postTitleSubtitle");
         BlogResponse response = null;
         try {
+            titleSubtitle.collectAndSetCreateUpdateDate();
             titleSubtitleRepository.save(titleSubtitle);
             response = new BlogResponse("success", getMessage("title.and.subtitle.has.been.saved.successfully"));
             return response;

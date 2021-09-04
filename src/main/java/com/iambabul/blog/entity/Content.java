@@ -1,6 +1,8 @@
 package com.iambabul.blog.entity;
 
+import com.iambabul.blog.util.BlogStatus;
 import com.iambabul.blog.util.EntityUtils;
+import com.iambabul.blog.util.UtilBase;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity @Data
-public class Content implements EntityUtils {
+public class Content extends UtilBase implements EntityUtils {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -23,9 +25,16 @@ public class Content implements EntityUtils {
     @OneToMany
     private List<Comment> comments;
 
+    private BlogStatus status = BlogStatus.ACTIVE;
+
     @Override
     public void collectAndSetCreateUpdateDate() {
         this.setCreated(new Date());
         this.setUpdated(new Date());
+    }
+
+    @Override
+    public String getEntityName() {
+        return getMessage("content");
     }
 }
