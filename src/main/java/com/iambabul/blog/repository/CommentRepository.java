@@ -1,9 +1,9 @@
 package com.iambabul.blog.repository;
 
-import com.iambabul.blog.entity.Content;
+import com.iambabul.blog.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ContentRepository extends JpaRepository<Content, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 }

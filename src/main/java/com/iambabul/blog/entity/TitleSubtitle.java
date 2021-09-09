@@ -36,6 +36,6 @@ public class TitleSubtitle extends UtilBase implements EntityUtils {
 
     @Override
     public String getEntityName() {
-        return getMessage("title.and.subtitle");
+        return getText("title.and.subtitle");
     }
 }

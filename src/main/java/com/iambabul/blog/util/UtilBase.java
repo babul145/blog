@@ -16,7 +16,7 @@ public class UtilBase {
     @Autowired
     private Environment env;
 
-    public String getMessage(String propertyKey, String... param) {
+    public String getText(String propertyKey, String... param) {
         String propertyValue = env.getProperty(propertyKey);
         List<String> params = Arrays.asList(param);
         if (propertyValue != null && params.size() > 0) {
@@ -32,10 +32,10 @@ public class UtilBase {
 
     public BlogResponse getBlogResponse(String responseType, String responseTitle, String failedReason) {
         if (responseType.equals(Constants.RESPONSE_TYPE_SUCCESS)) {
-            return new BlogResponse(getMessage(responseType), getMessage("x0.has.been.saved.successfully", responseTitle));
+            return new BlogResponse(getText(responseType), getText("x0.has.been.saved.successfully", responseTitle));
         }
         else if (responseType.equals(Constants.RESPONSE_TYPE_FAILED)) {
-            return new BlogResponse(getMessage(responseType), getMessage("failed.to.save.x0-x1", responseTitle, failedReason));
+            return new BlogResponse(getText(responseType), getText("failed.to.save.x0-x1", responseTitle, failedReason));
         }
         else {
             log.error("response type not found");

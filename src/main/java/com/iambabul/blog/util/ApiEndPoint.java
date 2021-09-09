@@ -8,4 +8,7 @@ public class ApiEndPoint {
 
     public static final String HOME_CONTENTS = "/contents";
     public static final String HOME_ROOT_CONTENTS = HOME_ROOT + HOME_CONTENTS;
+
+    public static final String HOME_COMMENT = "/comment";
+    public static final String HOME_ROOT_COMMENT = HOME_ROOT + HOME_COMMENT;
 }

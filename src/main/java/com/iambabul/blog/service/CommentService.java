@@ -1,23 +1,37 @@
 package com.iambabul.blog.service;
 
 import com.iambabul.blog.entity.BlogResponse;
-import com.iambabul.blog.entity.Content;
-import com.iambabul.blog.repository.ContentRepository;
+import com.iambabul.blog.entity.Comment;
+import com.iambabul.blog.repository.CommentRepository;
 import com.iambabul.blog.util.Constants;
 import com.iambabul.blog.util.UtilBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ContentService extends UtilBase {
-    private final ContentRepository contentRepository;
+public class CommentService extends UtilBase {
+    private final CommentRepository commentRepository;
 
-    public List<Content> getContents() {
+    public BlogResponse postComment(Comment comment) {
+        log.info("postComment");
+        BlogResponse blogResponse = null;
+        try {
+            comment.collectAndSetCreateUpdateDate();
+            commentRepository.save(comment);
+            blogResponse = getBlogResponse(Constants.RESPONSE_TYPE_SUCCESS, Comment.class.getSimpleName(), null);
+            return blogResponse;
+        }
+        catch (Exception ex) {
+            log.error(ex.getMessage());
+            blogResponse = getBlogResponse(Constants.RESPONSE_TYPE_FAILED, Comment.class.getSimpleName(), ex.getMessage());
+            return blogResponse;
+        }
+    }
+
+    /*public List<Content> getContents() {
         log.info("getContents");
         try {
             return contentRepository.findAll();
@@ -25,22 +39,6 @@ public class ContentService extends UtilBase {
         catch (Exception ex) {
             log.error(ex.getMessage());
             throw ex;
-        }
-    }
-
-    public BlogResponse postContents(Content content) {
-        log.info("postContents");
-        BlogResponse blogResponse = null;
-        try {
-            content.collectAndSetCreateUpdateDate();
-            contentRepository.save(content);
-            blogResponse = getBlogResponse(Constants.RESPONSE_TYPE_SUCCESS, Content.class.getSimpleName(), null);
-            return blogResponse;
-        }
-        catch (Exception ex) {
-            log.error(ex.getMessage());
-            blogResponse = getBlogResponse(Constants.RESPONSE_TYPE_FAILED, Content.class.getSimpleName(), ex.getMessage());
-            return blogResponse;
         }
     }
 
@@ -64,16 +62,16 @@ public class ContentService extends UtilBase {
                     .orElseThrow(() -> new IllegalStateException("No found"));
             if (existingContent != null) {
                 contentRepository.save(content);
-                response = new BlogResponse(getText("success"), getText("x0.has.been.updated.successfully", content.getEntityName()));
+                response = new BlogResponse(getMessage("success"), getMessage("x0.has.been.updated.successfully", content.getEntityName()));
             }
             else {
-                response = new BlogResponse(getText("failed"), getText("failed.to.update.x0-x1", getText("content"), "No found"));
+                response = new BlogResponse(getMessage("failed"), getMessage("failed.to.update.x0-x1",getMessage("content"), "No found"));
             }
             return response;
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            response = new BlogResponse(getText("failed"), getText("failed.to.update.x0-x1", Content.class.getSimpleName(), ex.getMessage()));
+            response = new BlogResponse(getMessage("failed"), getMessage("failed.to.update.x0-x1", Content.class.getSimpleName(), ex.getMessage()));
             return response;
         }
     }
@@ -84,17 +82,17 @@ public class ContentService extends UtilBase {
         try {
             if (id != null) {
                 contentRepository.deleteById(id);
-                response = new BlogResponse(getText("success"), getText("x0.has.been.deleted.successfully", getText("content")));
+                response = new BlogResponse(getMessage("success"), getMessage("x0.has.been.deleted.successfully", getMessage("content")));
             }
             else {
-                response = new BlogResponse(getText("failed"), getText("failed.to.delete.x0-x1","No found"));
+                response = new BlogResponse(getMessage("failed"), getMessage("failed.to.delete.x0-x1","No found"));
             }
             return response;
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            response = new BlogResponse(getText("failed"), getText("failed.to.delete.x0-x1", getText("content"), ex.getMessage()));
+            response = new BlogResponse(getMessage("failed"), getMessage("failed.to.delete.x0-x1", getMessage("content"), ex.getMessage()));
             return response;
         }
-    }
+    }*/
 }

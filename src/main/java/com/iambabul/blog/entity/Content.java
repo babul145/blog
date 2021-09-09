@@ -35,6 +35,6 @@ public class Content extends UtilBase implements EntityUtils {
 
     @Override
     public String getEntityName() {
-        return getMessage("content");
+        return getText("content");
     }
 }

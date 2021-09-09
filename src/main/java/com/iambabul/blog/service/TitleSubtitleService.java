@@ -47,12 +47,12 @@ public class TitleSubtitleService extends UtilBase {
         try {
             titleSubtitle.collectAndSetCreateUpdateDate();
             titleSubtitleRepository.save(titleSubtitle);
-            response = new BlogResponse("success", getMessage("title.and.subtitle.has.been.saved.successfully"));
+            response = new BlogResponse("success", getText("title.and.subtitle.has.been.saved.successfully"));
             return response;
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            response = new BlogResponse("failed", getMessage("x0.failed.to.save.title.and.subtitle-x1", "babul", ex.getMessage()));
+            response = new BlogResponse("failed", getText("x0.failed.to.save.title.and.subtitle-x1", "babul", ex.getMessage()));
             return response;
         }
     }
@@ -65,16 +65,16 @@ public class TitleSubtitleService extends UtilBase {
                     .orElseThrow(() -> new IllegalStateException("No found"));
             if (existingTitleSubtitle != null) {
                 titleSubtitleRepository.save(titleSubtitle);
-                response = new BlogResponse(getMessage("success"), getMessage("title.and.subtitle.has.been.updated.successfully"));
+                response = new BlogResponse(getText("success"), getText("title.and.subtitle.has.been.updated.successfully"));
             }
             else {
-                response = new BlogResponse(getMessage("failed"), getMessage("x0.failed.to.update.title.and.subtitle-x1", "babul", "unknown"));
+                response = new BlogResponse(getText("failed"), getText("x0.failed.to.update.title.and.subtitle-x1", "babul", "unknown"));
             }
             return response;
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            response = new BlogResponse(getMessage("failed"), getMessage("x0.failed.to.update.title.and.subtitle-x1", "babul", ex.getMessage()));
+            response = new BlogResponse(getText("failed"), getText("x0.failed.to.update.title.and.subtitle-x1", "babul", ex.getMessage()));
             return response;
         }
     }
@@ -85,16 +85,16 @@ public class TitleSubtitleService extends UtilBase {
         try {
             if (id != null) {
                 titleSubtitleRepository.deleteById(id);
-                response = new BlogResponse(getMessage("success"), getMessage("title.and.subtitle.has.been.deleted.successfully"));
+                response = new BlogResponse(getText("success"), getText("title.and.subtitle.has.been.deleted.successfully"));
             }
             else {
-                response = new BlogResponse(getMessage("failed"), getMessage("x0.failed.to.delete.title.and.subtitle-x1", "babul", "unknown"));
+                response = new BlogResponse(getText("failed"), getText("x0.failed.to.delete.title.and.subtitle-x1", "babul", "unknown"));
             }
             return response;
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            response = new BlogResponse(getMessage("failed"), getMessage("x0.failed.to.delete.title.and.subtitle-x1", "babul", ex.getMessage()));
+            response = new BlogResponse(getText("failed"), getText("x0.failed.to.delete.title.and.subtitle-x1", "babul", ex.getMessage()));
             return response;
         }
     }
