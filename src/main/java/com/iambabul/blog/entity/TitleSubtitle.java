@@ -16,7 +16,7 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class TitleSubtitle extends UtilBase implements EntityUtils {
+public class TitleSubtitle extends EntityBase {
     @Id
     @GeneratedValue
     private Long id;
@@ -27,15 +27,4 @@ public class TitleSubtitle extends UtilBase implements EntityUtils {
     private Date updated;
 
     private BlogStatus status = BlogStatus.ACTIVE;
-
-    @Override
-    public void collectAndSetCreateUpdateDate() {
-        this.setCreated(new Date());
-        this.setUpdated(new Date());
-    }
-
-    @Override
-    public String getEntityName() {
-        return getText("title.and.subtitle");
-    }
 }

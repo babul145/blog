@@ -142,45 +142,51 @@ public class HomeController extends ControllerBase {
         return ResponseEntity.created(location).body(blogResponse);
     }
 
-    /*@GetMapping(ApiEndPoint.HOME_CONTENTS)
-    public ResponseEntity<?> getContents() {
+    @GetMapping(HOME_COMMENT)
+    public ResponseEntity<?> getComments() {
         try {
-            List<Content> contents = contentService.getContents();
-            return ResponseEntity.ok(contents);
+            List<Comment> comments = commentService.getComments();
+            return ResponseEntity.ok(comments);
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            BlogResponse blogResponse = new BlogResponse("failed", getMessage("failed.to.load.x0-x1", getMessage("content"), ex.getMessage()));
+            BlogResponse blogResponse = new BlogResponse(
+                    getText("failed"),
+                    getText("failed.to.load.x0-x1", getText("comment"), ex.getMessage())
+            );
             return ResponseEntity.ok(blogResponse);
         }
     }
 
-    @GetMapping(ApiEndPoint.HOME_CONTENTS + "/{id}")
-    public ResponseEntity<?> getContent(@PathVariable Long id) {
-        log.info("getContent");
+    @GetMapping(HOME_COMMENT + "/{id}")
+    public ResponseEntity<?> getComment(@PathVariable Long id) {
+        log.info("getComment");
         try {
-            Content content = contentService.getContent(id);
-            return ResponseEntity.ok(content);
+            Comment comment = commentService.getComment(id);
+            return ResponseEntity.ok(comment);
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            BlogResponse blogResponse = new BlogResponse("failed", getMessage("failed.to.load.x0-x1", Content.class.getSimpleName(), ex.getMessage()));
+            BlogResponse blogResponse = new BlogResponse(
+                    getText("failed"),
+                    getText("failed.to.load.x0-x1", getText("comment"), ex.getMessage())
+            );
             return ResponseEntity.ok(blogResponse);
         }
     }
 
-    @PutMapping(ApiEndPoint.HOME_CONTENTS)
-    public ResponseEntity<BlogResponse> putContent(@RequestBody Content content) {
-        log.info("putContent");
-        BlogResponse blogResponse = contentService.putContent(content);
+    @PutMapping(HOME_COMMENT)
+    public ResponseEntity<BlogResponse> putComment(@RequestBody Comment comment) {
+        log.info("putComment");
+        BlogResponse blogResponse = commentService.putComment(comment);
         return ResponseEntity.ok(blogResponse);
     }
 
-    @DeleteMapping(ApiEndPoint.HOME_CONTENTS + "/{id}")
-    public ResponseEntity<BlogResponse> deleteContent(@PathVariable Long id) {
-        log.info("deleteContent");
-        BlogResponse blogResponse = contentService.deleteContent(id);
+    @DeleteMapping(HOME_COMMENT + "/{id}")
+    public ResponseEntity<BlogResponse> deleteComment(@PathVariable Long id) {
+        log.info("deleteComment");
+        BlogResponse blogResponse = commentService.deleteComment(id);
         return ResponseEntity.ok(blogResponse);
-    }*/
+    }
     //end comment
 }

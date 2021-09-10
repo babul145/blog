@@ -64,6 +64,7 @@ public class TitleSubtitleService extends UtilBase {
             TitleSubtitle existingTitleSubtitle = titleSubtitleRepository.findById(titleSubtitle.getId())
                     .orElseThrow(() -> new IllegalStateException("No found"));
             if (existingTitleSubtitle != null) {
+                titleSubtitle.collectCreateDateAndSetUpdateDate(existingTitleSubtitle.getCreated());
                 titleSubtitleRepository.save(titleSubtitle);
                 response = new BlogResponse(getText("success"), getText("title.and.subtitle.has.been.updated.successfully"));
             }

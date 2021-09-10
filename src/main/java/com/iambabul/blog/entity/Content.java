@@ -11,30 +11,16 @@ import java.util.Date;
 import java.util.List;
 
 @Entity @Data
-public class Content extends UtilBase implements EntityUtils {
+public class Content extends EntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String title;
-
     @Size(max = 99999)
     private String text;
     private Date created;
     private Date updated;
-
     @OneToMany
     private List<Comment> comments;
-
     private BlogStatus status = BlogStatus.ACTIVE;
-
-    @Override
-    public void collectAndSetCreateUpdateDate() {
-        this.setCreated(new Date());
-        this.setUpdated(new Date());
-    }
-
-    @Override
-    public String getEntityName() {
-        return getText("content");
-    }
 }

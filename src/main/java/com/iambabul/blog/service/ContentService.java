@@ -8,11 +8,13 @@ import com.iambabul.blog.util.UtilBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ContentService extends UtilBase {
     private final ContentRepository contentRepository;
@@ -61,10 +63,11 @@ public class ContentService extends UtilBase {
         BlogResponse response = null;
         try {
             Content existingContent = contentRepository.findById(content.getId())
-                    .orElseThrow(() -> new IllegalStateException("No found"));
+                    .orElseThrow(() -> new IllegalStateException(getText("no.found")));
             if (existingContent != null) {
+                content.collectCreateDateAndSetUpdateDate(existingContent.getCreated());
                 contentRepository.save(content);
-                response = new BlogResponse(getText("success"), getText("x0.has.been.updated.successfully", content.getEntityName()));
+                response = new BlogResponse(getText("success"), getText("x0.has.been.updated.successfully", getText("content")));
             }
             else {
                 response = new BlogResponse(getText("failed"), getText("failed.to.update.x0-x1", getText("content"), "No found"));

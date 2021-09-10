@@ -8,9 +8,13 @@ import com.iambabul.blog.util.UtilBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CommentService extends UtilBase {
     private final CommentRepository commentRepository;
@@ -21,7 +25,10 @@ public class CommentService extends UtilBase {
         try {
             comment.collectAndSetCreateUpdateDate();
             commentRepository.save(comment);
-            blogResponse = getBlogResponse(Constants.RESPONSE_TYPE_SUCCESS, Comment.class.getSimpleName(), null);
+            blogResponse = new BlogResponse(
+                    getText("success"),
+                    getText("x0.has.been.added.successfully", getText("comment"))
+            );
             return blogResponse;
         }
         catch (Exception ex) {
@@ -31,10 +38,10 @@ public class CommentService extends UtilBase {
         }
     }
 
-    /*public List<Content> getContents() {
-        log.info("getContents");
+    public List<Comment> getComments() {
+        log.info("getComments");
         try {
-            return contentRepository.findAll();
+            return commentRepository.findAll();
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
@@ -42,11 +49,11 @@ public class CommentService extends UtilBase {
         }
     }
 
-    public Content getContent(Long id) {
-        log.info("getContent");
+    public Comment getComment(Long id) {
+        log.info("getComment");
         try {
-            return contentRepository.findById(id)
-                    .orElseThrow(() -> new IllegalStateException("No found"));
+            return commentRepository.findById(id)
+                    .orElseThrow(() -> new IllegalStateException(getText("no.found")));
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
@@ -54,45 +61,64 @@ public class CommentService extends UtilBase {
         }
     }
 
-    public BlogResponse putContent(Content content) {
-        log.info("putContent");
+    public BlogResponse putComment(Comment comment) {
+        log.info("putComment");
         BlogResponse response = null;
         try {
-            Content existingContent = contentRepository.findById(content.getId())
-                    .orElseThrow(() -> new IllegalStateException("No found"));
+            Comment existingContent = commentRepository.findById(comment.getId())
+                    .orElseThrow(() -> new IllegalStateException(getText("no.found")));
             if (existingContent != null) {
-                contentRepository.save(content);
-                response = new BlogResponse(getMessage("success"), getMessage("x0.has.been.updated.successfully", content.getEntityName()));
+                comment.collectCreateDateAndSetUpdateDate(existingContent.getCreated());
+                commentRepository.save(comment);
+                response = new BlogResponse(
+                        getText("success"),
+                        getText("x0.has.been.updated.successfully", getText("comment"))
+                );
             }
             else {
-                response = new BlogResponse(getMessage("failed"), getMessage("failed.to.update.x0-x1",getMessage("content"), "No found"));
+                response = new BlogResponse(
+                        getText("failed"),
+                        getText("failed.to.update.x0-x1",getText("comment"), getText("no.found"))
+                );
             }
             return response;
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            response = new BlogResponse(getMessage("failed"), getMessage("failed.to.update.x0-x1", Content.class.getSimpleName(), ex.getMessage()));
+            response = new BlogResponse(
+                    getText("failed"),
+                    getText("failed.to.update.x0-x1", getText("comment"), ex.getMessage())
+            );
             return response;
         }
     }
 
-    public BlogResponse deleteContent(Long id) {
-        log.info("deleteContent");
+    public BlogResponse deleteComment(Long id) {
+        log.info("deleteComment");
         BlogResponse response = null;
         try {
             if (id != null) {
-                contentRepository.deleteById(id);
-                response = new BlogResponse(getMessage("success"), getMessage("x0.has.been.deleted.successfully", getMessage("content")));
+                commentRepository.deleteById(id);
+                response = new BlogResponse(
+                        getText("success"),
+                        getText("x0.has.been.deleted.successfully", getText("comment"))
+                );
             }
             else {
-                response = new BlogResponse(getMessage("failed"), getMessage("failed.to.delete.x0-x1","No found"));
+                response = new BlogResponse(
+                        getText("failed"),
+                        getText("failed.to.delete.x0-x1", getText("no.found"))
+                );
             }
             return response;
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            response = new BlogResponse(getMessage("failed"), getMessage("failed.to.delete.x0-x1", getMessage("content"), ex.getMessage()));
+            response = new BlogResponse(
+                    getText("failed"),
+                    getText("failed.to.delete.x0-x1", getText("comment"), ex.getMessage())
+            );
             return response;
         }
-    }*/
+    }
 }

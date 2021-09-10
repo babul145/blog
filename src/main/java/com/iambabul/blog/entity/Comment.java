@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Data
 @Entity
-public class Comment extends UtilBase implements EntityUtils {
+public class Comment extends EntityBase {
     @Id
     @GeneratedValue
     private Long id;
@@ -19,15 +19,4 @@ public class Comment extends UtilBase implements EntityUtils {
 
     private Date created;
     private Date updated;
-
-    @Override
-    public void collectAndSetCreateUpdateDate() {
-        this.setCreated(new Date());
-        this.setUpdated(new Date());
-    }
-
-    @Override
-    public String getEntityName() {
-        return getText("comment");
-    }
 }
