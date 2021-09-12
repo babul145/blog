@@ -7,9 +7,13 @@ import com.iambabul.blog.util.Constants;
 import com.iambabul.blog.util.UtilBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -22,7 +26,7 @@ public class ContentService extends UtilBase {
     public List<Content> getContents() {
         log.info("getContents");
         try {
-            return contentRepository.findAll();
+            return contentRepository.findAll(Sort.by(getText("created")).descending());
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
@@ -98,6 +102,19 @@ public class ContentService extends UtilBase {
             log.error(ex.getMessage());
             response = new BlogResponse(getText("failed"), getText("failed.to.delete.x0-x1", getText("content"), ex.getMessage()));
             return response;
+        }
+    }
+
+    public Page<Content> get5Contents() {
+        log.info("get5Contents");
+        try {
+            PageRequest pageRequest = PageRequest.of(Constants.PAGE_NUMBER_ZERO, Constants.PAGE_ITEM_SIZE_FIVE, Sort.by(Sort.Direction.DESC, getText("created")));
+            Page<Content> page = contentRepository.findAll(pageRequest);
+            return page;
+        }
+        catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw ex;
         }
     }
 }

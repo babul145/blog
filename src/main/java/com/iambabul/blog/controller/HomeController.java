@@ -10,6 +10,7 @@ import com.iambabul.blog.service.TitleSubtitleService;
 import com.iambabul.blog.util.ApiEndPoint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -189,4 +190,20 @@ public class HomeController extends ControllerBase {
         return ResponseEntity.ok(blogResponse);
     }
     //end comment
+
+    @GetMapping(HOME_5CONTENTS)
+    public ResponseEntity<?> get5Contents() {
+        try {
+            Page<Content> contents = contentService.get5Contents();
+            return ResponseEntity.ok(contents);
+        }
+        catch (Exception ex) {
+            log.error(ex.getMessage());
+            BlogResponse blogResponse = new BlogResponse(
+                    getText("failed"),
+                    getText("failed.to.load.x0-x1", getText("content"), ex.getMessage())
+            );
+            return ResponseEntity.ok(blogResponse);
+        }
+    }
 }
