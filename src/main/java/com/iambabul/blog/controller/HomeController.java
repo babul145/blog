@@ -4,6 +4,7 @@ import com.iambabul.blog.entity.BlogResponse;
 import com.iambabul.blog.entity.Comment;
 import com.iambabul.blog.entity.Content;
 import com.iambabul.blog.entity.TitleSubtitle;
+import com.iambabul.blog.exception.BlogException;
 import com.iambabul.blog.service.CommentService;
 import com.iambabul.blog.service.ContentService;
 import com.iambabul.blog.service.TitleSubtitleService;
@@ -160,20 +161,10 @@ public class HomeController extends ControllerBase {
     }
 
     @GetMapping(HOME_COMMENT + "/{id}")
-    public ResponseEntity<?> getComment(@PathVariable Long id) {
+    public ResponseEntity<?> getComment(@PathVariable Long id) throws BlogException {
         log.info("getComment");
-        try {
-            Comment comment = commentService.getComment(id);
-            return ResponseEntity.ok(comment);
-        }
-        catch (Exception ex) {
-            log.error(ex.getMessage());
-            BlogResponse blogResponse = new BlogResponse(
-                    getText("failed"),
-                    getText("failed.to.load.x0-x1", getText("comment"), ex.getMessage())
-            );
-            return ResponseEntity.ok(blogResponse);
-        }
+        Comment comment = commentService.getComment(id);
+        return ResponseEntity.ok(comment);
     }
 
     @PutMapping(HOME_COMMENT)
@@ -191,11 +182,27 @@ public class HomeController extends ControllerBase {
     }
     //end comment
 
-    @GetMapping(HOME_5CONTENTS)
+    /*@GetMapping(HOME_5CONTENTS)
     public ResponseEntity<?> get5Contents() {
         try {
             Page<Content> contents = contentService.get5Contents();
-            return ResponseEntity.ok(contents);
+            return ResponseEntity.ok().body(contents);
+        }
+        catch (Exception ex) {
+            log.error(ex.getMessage());
+            BlogResponse blogResponse = new BlogResponse(
+                    getText("failed"),
+                    getText("failed.to.load.x0-x1", getText("content"), ex.getMessage())
+            );
+            return ResponseEntity.ok(blogResponse);
+        }
+    }*/
+
+    @GetMapping(HOME_5CONTENTS)
+    public ResponseEntity<?> get5Contents() {
+        try {
+            List contents = contentService.get5Contents();
+            return ResponseEntity.ok().body(contents);
         }
         catch (Exception ex) {
             log.error(ex.getMessage());

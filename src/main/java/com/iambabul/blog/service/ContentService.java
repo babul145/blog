@@ -2,19 +2,19 @@ package com.iambabul.blog.service;
 
 import com.iambabul.blog.entity.BlogResponse;
 import com.iambabul.blog.entity.Content;
+import com.iambabul.blog.projection.ContentIdTitleCreated;
 import com.iambabul.blog.repository.ContentRepository;
 import com.iambabul.blog.util.Constants;
 import com.iambabul.blog.util.UtilBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -22,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContentService extends UtilBase {
     private final ContentRepository contentRepository;
+    private final EntityManager entityManager;
 
     public List<Content> getContents() {
         log.info("getContents");
@@ -105,12 +106,27 @@ public class ContentService extends UtilBase {
         }
     }
 
-    public Page<Content> get5Contents() {
+    /*public Page<Content> get5Contents() {
         log.info("get5Contents");
         try {
             PageRequest pageRequest = PageRequest.of(Constants.PAGE_NUMBER_ZERO, Constants.PAGE_ITEM_SIZE_FIVE, Sort.by(Sort.Direction.DESC, getText("created")));
             Page<Content> page = contentRepository.findAll(pageRequest);
             return page;
+        }
+        catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw ex;
+        }
+    }*/
+
+    public List<Content> get5Contents() {
+        log.info("get5Contents");
+        try {
+            List contents = contentRepository.findBy(ContentIdTitleCreated.class).stream().limit(5).collect(Collectors.toList());
+            /*List<Content> contents = entityManager.createQuery("SELECT c.id, c.title FROM Content c ORDER BY c.created DESC", Content.class)
+                    .getResultList();
+            List<Content> contents = contentRepository.findFirst10ByCreated(new Date(), Sort.by("created"));*/
+            return contents;
         }
         catch (Exception ex) {
             log.error(ex.getMessage());

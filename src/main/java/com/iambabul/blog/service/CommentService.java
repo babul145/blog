@@ -2,6 +2,7 @@ package com.iambabul.blog.service;
 
 import com.iambabul.blog.entity.BlogResponse;
 import com.iambabul.blog.entity.Comment;
+import com.iambabul.blog.exception.BlogException;
 import com.iambabul.blog.repository.CommentRepository;
 import com.iambabul.blog.util.Constants;
 import com.iambabul.blog.util.UtilBase;
@@ -49,15 +50,19 @@ public class CommentService extends UtilBase {
         }
     }
 
-    public Comment getComment(Long id) {
+    public Comment getComment(Long id) throws BlogException {
         log.info("getComment");
         try {
-            return commentRepository.findById(id)
-                    .orElseThrow(() -> new IllegalStateException(getText("no.found")));
+            return commentRepository.findById(id).get();
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            throw ex;
+            throw new BlogException(
+                    getText("x0.not.found.with.id.x1",
+                            getText("comment"),
+                            id.toString()
+                    )
+            );
         }
     }
 
