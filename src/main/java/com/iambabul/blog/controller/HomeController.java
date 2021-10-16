@@ -25,7 +25,7 @@ import static com.iambabul.blog.util.ApiEndPoint.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(ApiEndPoint.HOME_ROOT)
+@RequestMapping(HOME_ROOT)
 public class HomeController extends ControllerBase {
     private final TitleSubtitleService titleSubtitleService;
     private final ContentService contentService;
@@ -85,15 +85,15 @@ public class HomeController extends ControllerBase {
     //end title subtitle
 
     //start content
-    @PostMapping(ApiEndPoint.HOME_CONTENTS)
+    @PostMapping(HOME_CONTENTS)
     public ResponseEntity<BlogResponse> postContents(@RequestBody Content content) {
         log.info("postContents");
-        URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path(ApiEndPoint.HOME_ROOT_CONTENTS).toUriString());
+        URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path(HOME_ROOT_CONTENTS).toUriString());
         BlogResponse blogResponse = contentService.postContents(content);
         return ResponseEntity.created(location).body(blogResponse);
     }
 
-    @GetMapping(ApiEndPoint.HOME_CONTENTS)
+    @GetMapping(HOME_CONTENTS)
     public ResponseEntity<?> getContents() {
         try {
             List<Content> contents = contentService.getContents();
@@ -106,7 +106,7 @@ public class HomeController extends ControllerBase {
         }
     }
 
-    @GetMapping(ApiEndPoint.HOME_CONTENTS + "/{id}")
+    @GetMapping(HOME_CONTENTS + "/{id}")
     public ResponseEntity<?> getContent(@PathVariable Long id) {
         log.info("getContent");
         try {
@@ -120,14 +120,14 @@ public class HomeController extends ControllerBase {
         }
     }
 
-    @PutMapping(ApiEndPoint.HOME_CONTENTS)
+    @PutMapping(HOME_CONTENTS)
     public ResponseEntity<BlogResponse> putContent(@RequestBody Content content) {
         log.info("putContent");
         BlogResponse blogResponse = contentService.putContent(content);
         return ResponseEntity.ok(blogResponse);
     }
 
-    @DeleteMapping(ApiEndPoint.HOME_CONTENTS + "/{id}")
+    @DeleteMapping(HOME_CONTENTS + "/{id}")
     public ResponseEntity<BlogResponse> deleteContent(@PathVariable Long id) {
         log.info("deleteContent");
         BlogResponse blogResponse = contentService.deleteContent(id);
