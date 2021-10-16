@@ -1,8 +1,8 @@
-package com.iambabul.blog.controller;
+package com.iambabul.blog.api;
 
 import com.iambabul.blog.util.UtilBase;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ControllerBase extends UtilBase {
+public class ResourceBase extends UtilBase {
 }

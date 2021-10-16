@@ -1,4 +1,4 @@
-package com.iambabul.blog.controller;
+package com.iambabul.blog.api;
 
 import com.iambabul.blog.entity.BlogResponse;
 import com.iambabul.blog.entity.Comment;
@@ -8,10 +8,8 @@ import com.iambabul.blog.exception.BlogException;
 import com.iambabul.blog.service.CommentService;
 import com.iambabul.blog.service.ContentService;
 import com.iambabul.blog.service.TitleSubtitleService;
-import com.iambabul.blog.util.ApiEndPoint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,24 +23,24 @@ import static com.iambabul.blog.util.ApiEndPoint.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(HOME_ROOT)
-public class HomeController extends ControllerBase {
+@RequestMapping("/api/v1/home")
+public class HomeResource extends ResourceBase {
     private final TitleSubtitleService titleSubtitleService;
     private final ContentService contentService;
     private final CommentService commentService;
 
     //start title subtitle
-    @PostMapping(HOME_TITLE_SUBTITLE)
+    @PostMapping("/title-subtitle")
     public ResponseEntity<BlogResponse> postTitleSubtitle(@RequestBody TitleSubtitle titleSubtitle) {
-        log.info("postTitleSubtitle");
-        URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path(HOME_ROOT_TITLE_SUBTITLE).toUriString());
+        log.info("Saving title & subtitle in the database");
+        URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/home/title-subtitle").toUriString());
         BlogResponse blogResponse = titleSubtitleService.postTitleSubtitle(titleSubtitle);
         return ResponseEntity.created(location).body(blogResponse);
     }
 
-    @GetMapping(HOME_TITLE_SUBTITLE)
+    @GetMapping("/title-subtitle")
     public ResponseEntity<?> getAllTitleSubtitle() {
-        log.info("getAllTitleSubtitle");
+        log.info("Fetching all titles & subtitles");
         try {
             List<TitleSubtitle> titleSubtitles = titleSubtitleService.getAllTitleSubtitle();
             return ResponseEntity.ok(titleSubtitles);
@@ -54,9 +52,9 @@ public class HomeController extends ControllerBase {
         }
     }
 
-    @GetMapping(HOME_TITLE_SUBTITLE + "/{id}")
+    @GetMapping("/title-subtitle/{id}")
     public ResponseEntity<?> getTitleSubtitle(@PathVariable Long id) {
-        log.info("getTitleSubtitle");
+        log.info("Fetching title & subtitle {}", id);
         try {
             TitleSubtitle titleSubtitle = titleSubtitleService.getTitleSubtitle(id);
             return ResponseEntity.ok(titleSubtitle);
@@ -68,17 +66,17 @@ public class HomeController extends ControllerBase {
         }
     }
 
-    @PutMapping(HOME_TITLE_SUBTITLE)
+    @PutMapping("/title-subtitle")
     public ResponseEntity<BlogResponse> putTitleSubtitle(@RequestBody TitleSubtitle titleSubtitle) {
-        log.info("putTitleSubtitle");
+        log.info("Updating title & subtitle {}", titleSubtitle.getTitle());
         titleSubtitle.setUpdated(new Date());
         BlogResponse blogResponse = titleSubtitleService.putTitleSubtitle(titleSubtitle);
         return ResponseEntity.ok(blogResponse);
     }
 
-    @DeleteMapping(HOME_TITLE_SUBTITLE + "/{id}")
+    @DeleteMapping("/title-subtitle/{id}")
     public ResponseEntity<BlogResponse> deleteTitleSubtitle(@PathVariable Long id) {
-        log.info("deleteTitleSubtitle");
+        log.info("Deleting title & subtitle {}", id);
         BlogResponse blogResponse = titleSubtitleService.deleteTitleSubtitle(id);
         return ResponseEntity.ok(blogResponse);
     }
