@@ -83,16 +83,17 @@ public class HomeResource extends ResourceBase {
     //end title subtitle
 
     //start content
-    @PostMapping(HOME_CONTENTS)
+    @PostMapping("/content")
     public ResponseEntity<BlogResponse> postContents(@RequestBody Content content) {
-        log.info("postContents");
-        URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path(HOME_ROOT_CONTENTS).toUriString());
+        log.info("Saving content {} to the database", content.getId());
+        URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/home/content").toUriString());
         BlogResponse blogResponse = contentService.postContents(content);
         return ResponseEntity.created(location).body(blogResponse);
     }
 
-    @GetMapping(HOME_CONTENTS)
+    @GetMapping("/content")
     public ResponseEntity<?> getContents() {
+        log.info("Fetching all contents");
         try {
             List<Content> contents = contentService.getContents();
             return ResponseEntity.ok(contents);
@@ -104,9 +105,9 @@ public class HomeResource extends ResourceBase {
         }
     }
 
-    @GetMapping(HOME_CONTENTS + "/{id}")
+    @GetMapping("/content/{id}")
     public ResponseEntity<?> getContent(@PathVariable Long id) {
-        log.info("getContent");
+        log.info("Fetching content {}", id);
         try {
             Content content = contentService.getContent(id);
             return ResponseEntity.ok(content);
@@ -118,32 +119,33 @@ public class HomeResource extends ResourceBase {
         }
     }
 
-    @PutMapping(HOME_CONTENTS)
+    @PutMapping("/content")
     public ResponseEntity<BlogResponse> putContent(@RequestBody Content content) {
-        log.info("putContent");
+        log.info("Updating content {}", content.getId());
         BlogResponse blogResponse = contentService.putContent(content);
         return ResponseEntity.ok(blogResponse);
     }
 
-    @DeleteMapping(HOME_CONTENTS + "/{id}")
+    @DeleteMapping("/content/{id}")
     public ResponseEntity<BlogResponse> deleteContent(@PathVariable Long id) {
-        log.info("deleteContent");
+        log.info("Deleting content {}", id);
         BlogResponse blogResponse = contentService.deleteContent(id);
         return ResponseEntity.ok(blogResponse);
     }
     //end content
 
     //start comment
-    @PostMapping(HOME_COMMENT)
+    @PostMapping("/comment")
     public ResponseEntity<BlogResponse> postComment(@RequestBody Comment comment) {
-        log.info("postComment");
-        URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path(HOME_ROOT_COMMENT).toUriString());
+        log.info("Saving comment {} to the database", comment.getText());
+        URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/home/content").toUriString());
         BlogResponse blogResponse = commentService.postComment(comment);
         return ResponseEntity.created(location).body(blogResponse);
     }
 
-    @GetMapping(HOME_COMMENT)
+    @GetMapping("/comment")
     public ResponseEntity<?> getComments() {
+        log.info("Fetching all comments");
         try {
             List<Comment> comments = commentService.getComments();
             return ResponseEntity.ok(comments);
@@ -158,46 +160,31 @@ public class HomeResource extends ResourceBase {
         }
     }
 
-    @GetMapping(HOME_COMMENT + "/{id}")
+    @GetMapping("/comment/{id}")
     public ResponseEntity<?> getComment(@PathVariable Long id) throws BlogException {
-        log.info("getComment");
+        log.info("Fetching comment {}", id);
         Comment comment = commentService.getComment(id);
         return ResponseEntity.ok(comment);
     }
 
-    @PutMapping(HOME_COMMENT)
+    @PutMapping("/comment")
     public ResponseEntity<BlogResponse> putComment(@RequestBody Comment comment) {
-        log.info("putComment");
+        log.info("Updating comment {}", comment.getId());
         BlogResponse blogResponse = commentService.putComment(comment);
         return ResponseEntity.ok(blogResponse);
     }
 
-    @DeleteMapping(HOME_COMMENT + "/{id}")
+    @DeleteMapping("/comment/{id}")
     public ResponseEntity<BlogResponse> deleteComment(@PathVariable Long id) {
-        log.info("deleteComment");
+        log.info("Deleting comment {}", id);
         BlogResponse blogResponse = commentService.deleteComment(id);
         return ResponseEntity.ok(blogResponse);
     }
     //end comment
 
-    /*@GetMapping(HOME_5CONTENTS)
+    @GetMapping("/5content")
     public ResponseEntity<?> get5Contents() {
-        try {
-            Page<Content> contents = contentService.get5Contents();
-            return ResponseEntity.ok().body(contents);
-        }
-        catch (Exception ex) {
-            log.error(ex.getMessage());
-            BlogResponse blogResponse = new BlogResponse(
-                    getText("failed"),
-                    getText("failed.to.load.x0-x1", getText("content"), ex.getMessage())
-            );
-            return ResponseEntity.ok(blogResponse);
-        }
-    }*/
-
-    @GetMapping(HOME_5CONTENTS)
-    public ResponseEntity<?> get5Contents() {
+        log.info("Fetching 5 contents");
         try {
             List contents = contentService.get5Contents();
             return ResponseEntity.ok().body(contents);
