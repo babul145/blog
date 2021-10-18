@@ -1,6 +1,7 @@
 package com.iambabul.blog.util;
 
 import com.iambabul.blog.entity.BlogResponse;
+import com.iambabul.blog.exception.BlogException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;

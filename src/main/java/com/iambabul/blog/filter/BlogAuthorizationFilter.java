@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iambabul.blog.pojo.BlogError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -51,8 +52,7 @@ public class BlogAuthorizationFilter extends OncePerRequestFilter {
                 }
                 catch (Throwable ex) {
                     log.error("Error log in {}", ex.getMessage());
-                    Map<String, String> error = new HashMap<>();
-                    error.put("error", ex.getMessage());
+                    BlogError error = new BlogError(FORBIDDEN.value(), ex.getMessage());
                     response.setHeader("error", ex.getMessage());
                     response.setStatus(FORBIDDEN.value());
                     response.setContentType(APPLICATION_JSON_VALUE);

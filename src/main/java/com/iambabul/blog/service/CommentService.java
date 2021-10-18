@@ -21,9 +21,9 @@ public class CommentService extends UtilBase {
     private final CommentRepository commentRepository;
 
     public BlogResponse postComment(Comment comment) {
-        log.info("postComment");
         BlogResponse blogResponse = null;
         try {
+            log.info("Saving comment {} to the database", comment.getText());
             comment.collectAndSetCreateUpdateDate();
             commentRepository.save(comment);
             blogResponse = new BlogResponse(
@@ -34,42 +34,36 @@ public class CommentService extends UtilBase {
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            blogResponse = getBlogResponse(Constants.RESPONSE_TYPE_FAILED, Comment.class.getSimpleName(), ex.getMessage());
-            return blogResponse;
+            throw new BlogException(getText("failed.to.save.comment-x0", ex.getMessage()));
         }
     }
 
     public List<Comment> getComments() {
-        log.info("getComments");
         try {
+            log.info("Fetching all comments");
             return commentRepository.findAll();
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            throw ex;
+            throw new BlogException(getText("failed.to.load.comment-x0", ex.getMessage()));
         }
     }
 
-    public Comment getComment(Long id) throws BlogException {
-        log.info("getComment");
+    public Comment getComment(Long id) {
         try {
+            log.info("Fetching comment {}", id);
             return commentRepository.findById(id).get();
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            throw new BlogException(
-                    getText("x0.not.found.with.id.x1",
-                            getText("comment"),
-                            id.toString()
-                    )
-            );
+            throw new BlogException(getText("failed.to.load.comment-x0", ex.getMessage()));
         }
     }
 
     public BlogResponse putComment(Comment comment) {
-        log.info("putComment");
         BlogResponse response = null;
         try {
+            log.info("Updating comment {}", comment.getId());
             Comment existingContent = commentRepository.findById(comment.getId())
                     .orElseThrow(() -> new IllegalStateException(getText("no.found")));
             if (existingContent != null) {
@@ -90,19 +84,15 @@ public class CommentService extends UtilBase {
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            response = new BlogResponse(
-                    getText("failed"),
-                    getText("failed.to.update.x0-x1", getText("comment"), ex.getMessage())
-            );
-            return response;
+            throw new BlogException(getText("failed.to.update.comment-x0", ex.getMessage()));
         }
     }
 
     public BlogResponse deleteComment(Long id) {
-        log.info("deleteComment");
         BlogResponse response = null;
         try {
             if (id != null) {
+                log.info("Deleting comment {}", id);
                 commentRepository.deleteById(id);
                 response = new BlogResponse(
                         getText("success"),
@@ -119,11 +109,7 @@ public class CommentService extends UtilBase {
         }
         catch (Exception ex) {
             log.error(ex.getMessage());
-            response = new BlogResponse(
-                    getText("failed"),
-                    getText("failed.to.delete.x0-x1", getText("comment"), ex.getMessage())
-            );
-            return response;
+            throw new BlogException(getText("failed.to.delete.comment-x0", ex.getMessage()));
         }
     }
 }
