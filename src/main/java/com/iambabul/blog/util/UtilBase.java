@@ -17,7 +17,6 @@ public class UtilBase {
     @Autowired
     private Environment env;
 
-    //need some changes
     public String getText(String propertyKey, String... param) {
         String propertyValue = env.getProperty(propertyKey);
         List<String> params = Arrays.asList(param);
